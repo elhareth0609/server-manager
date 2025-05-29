@@ -1,0 +1,138 @@
+{
+  "paths": {
+    "base": "C:\\server-manager\\tmp\\mysql",
+    "www": "C:\\server-manager\\tmp\\mysql\\www",
+    "bin": "C:\\server-manager\\tmp\\mysql\\bin",
+    "data": "C:\\server-manager\\tmp\\mysql\\data",
+    "mysql_data": "C:\\server-manager\\tmp\\mysql\\data\\mysql",
+    "mariadb_data": "C:\\server-manager\\tmp\\mysql\\data\\mariadb"
+  },
+  "services": {
+    "apache": {
+      "port": 80,
+      "enabled": true,
+      "exe_path": "C:/server-manager/bin/apache/Apache24/bin/httpd.exe",
+      "config_path": "C:/server-manager/bin/apache/Apache24/conf/httpd.conf",
+      "document_root": "C:\\server-manager\\tmp\\mysql\\www",
+      "auto_start": false
+    },
+    "php": {
+      "port": 8000,
+      "enabled": true,
+      "exe_path": "C:/server-manager/bin/php/php-8.4.7-Win32-vs17-x64/php.exe",
+      "document_root": "C:\\server-manager\\tmp\\mysql\\www",
+      "auto_start": false,
+      "extensions": [
+        "mysqli",
+        "pdo_mysql",
+        "mbstring",
+        "openssl"
+      ]
+    },
+    "mysql": {
+      "port": 3306,
+      "enabled": true,
+      "exe_path": "C:/server-manager/bin/MySQL/mysql-8.0.42-winx64/bin/mysqld.exe",
+      "data_dir": "C:/server-manager/data/mysql",
+      "bind_address": "127.0.0.1",
+      "auto_start": false,
+      "root_password": "",
+      "root_password_temp": "",
+      "default_charset": "utf8mb4"
+    },
+    "mariadb": {
+      "port": 3307,
+      "enabled": false,
+      "exe_path": "C:/server-manager/bin/MariaDB/mariadb-12.0.0-winx64/bin/mysqld.exe",
+      "data_dir": "C:/server-manager/data/mariadb",
+      "socket": "C:/server-manager/data/mariadb/mariadb.sock",
+      "auto_start": false,
+      "root_password": "",
+      "default_charset": "utf8mb4"
+    },
+    "phpmyadmin": {
+      "port": 8080,
+      "enabled": true,
+      "path": "C:/server-manager/bin/phpMyAdmin",
+      "url": "http://localhost/phpmyadmin",
+      "auto_start": false,
+      "config": {
+        "blowfish_secret": "auto_generated_secret_key_here",
+        "default_server": "mysql"
+      }
+    },
+    "ngrok": {
+      "enabled": true,
+      "exe_path": "C:/server-manager/bin/ngrok/ngrok.exe",
+      "auth_token": "",
+      "region": "us",
+      "tunnels": []
+    }
+  },
+  "tools": {
+    "cmder": {
+      "exe_path": "C:\\server-manager\\tmp\\mysql\\bin\\cmder\\Cmder.exe",
+      "default_path": "C:/server-manager/www"
+    },
+    "heidisql": {
+      "exe_path": "C:/server-manager/bin/HeidiSQL/heidisql.exe",
+      "auto_connect": true,
+      "connections": [
+        {
+          "name": "Local MySQL",
+          "host": "localhost",
+          "port": 3306,
+          "user": "root",
+          "type": "mysql"
+        },
+        {
+          "name": "Local MariaDB",
+          "host": "localhost",
+          "port": 3307,
+          "user": "root",
+          "type": "mariadb"
+        }
+      ]
+    },
+    "node": {
+      "exe_path": "C:/server-manager/bin/node/node-v22.16.0-win-x64/node.exe",
+      "npm_path": "C:/server-manager/bin/node/node-v22.16.0-win-x64/npm.cmd"
+    }
+  },
+  "downloads": {
+    "cmder": "https://github.com/cmderdev/cmder/releases/download/v1.3.25/cmder.zip",
+    "apache": "https://www.apachelounge.com/download/VS17/binaries/httpd-2.4.63-250207-win64-VS17.zip",
+    "php": "https://windows.php.net/downloads/releases/php-8.4.7-Win32-vs17-x64.zip",
+    "mariadb": "https://archive.mariadb.org//mariadb-12.0.0/winx64-packages/mariadb-12.0.0-winx64.zip",
+    "phpmyadmin": "https://files.phpmyadmin.net/phpMyAdmin/5.2.2/phpMyAdmin-5.2.2-all-languages.zip",
+    "ngrok": "https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-windows-amd64.zip",
+    "nodejs": "https://nodejs.org/dist/v22.16.0/node-v22.16.0-win-x64.zip",
+    "mysql": "https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-8.0.42-winx64.zip",
+    "heidisql": "https://www.heidisql.com/downloads/releases/HeidiSQL_12.10_32_Portable.zip",
+    "composer": "https://getcomposer.org/download/latest-stable/composer.phar",
+    "git": "https://github.com/git-for-windows/git/releases/download/v2.49.0.windows.1/MinGit-2.49.0-64-bit.zip"
+  },
+  "ui": {
+    "theme": "dark",
+    "auto_refresh_status": true,
+    "refresh_interval": 5000,
+    "show_notifications": true,
+    "minimize_to_tray": true,
+    "start_minimized": false
+  },
+  "security": {
+    "auto_update": true,
+    "check_certificates": true,
+    "allowed_origins": [
+      "http://localhost",
+      "http://127.0.0.1"
+    ]
+  },
+  "logging": {
+    "level": "info",
+    "file_path": "C:\\server-manager\\tmp\\mysql\\logs\\server-manager.log",
+    "max_file_size": "10MB",
+    "max_files": 5,
+    "console_output": true
+  }
+}

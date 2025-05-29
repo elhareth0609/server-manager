@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Manager - Installation Setup</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            overflow: hidden;
+        }
+
+        .container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 30px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        .content {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .step.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .step.completed {
+            background: #27ae60;
+            color: white;
+        }
+
+        .step-number {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+
+        .step-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .step-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 14px;
+        }
+
+        .form-group .description {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-bottom: 12px;
+        }
+
+        .path-input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .path-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #e0e6ed;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .path-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .browse-btn {
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .browse-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .tool-card {
+            background: white;
+            border: 2px solid #e0e6ed;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .tool-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .tool-card.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+        }
+
+        .tool-card.required {
+            border-color: #f39c12;
+            background: rgba(243, 156, 18, 0.05);
+        }
+
+        .tool-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .tool-checkbox {
+            margin-right: 12px;
+            width: 18px;
+            height: 18px;
+        }
+
+        .tool-name {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 16px;
+        }
+
+        .tool-version {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-left: auto;
+        }
+
+        .tool-description {
+            color: #7f8c8d;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .tool-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+        }
+
+        .tool-size {
+            color: #27ae60;
+            font-weight: 600;
+        }
+
+        .tool-category {
+            background: #ecf0f1;
+            padding: 2px 8px;
+            border-radius: 12px;
+            color: #7f8c8d;
+            font-size: 11px;
+        }
+
+        .checkbox-group {
+            margin-top: 20px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .checkbox-item:last-child {
+            border-bottom: none;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            margin-right: 12px;
+            width: 16px;
+            height: 16px;
+        }
+
+        .checkbox-item label {
+            font-size: 14px;
+            color: #2c3e50;
+            cursor: pointer;
+        }
+
+        .summary-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .summary-label {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .summary-value {
+            color: #6c757d;
+            font-family: monospace;
+            font-size: 13px;
+        }
+
+        .progress-container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .progress-text {
+            font-size: 14px;
+            color: #6c757d;
+            margin-top: 10px;
+        }
+
+        .progress-percent {
+            font-size: 24px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .buttons {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .installation-complete {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .success-icon {
+            font-size: 48px;
+            color: #27ae60;
+            margin-bottom: 20px;
+        }
+
+        .success-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .success-message {
+            color: #7f8c8d;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Server Manager Installation</h1>
+            <p>Set up your development environment with ease</p>
+        </div>
+
+        <div class="content">
+            <div class="sidebar">
+                <div class="step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div>Installation Path</div>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-number">2</div>
+                    <div>Select Tools</div>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-number">3</div>
+                    <div>Preferences</div>
+                </div>
+                <div class="step" data-step="4">
+                    <div class="step-number">4</div>
+                    <div>Summary</div>
+                </div>
+                <div class="step" data-step="5">
+                    <div class="step-number">5</div>
+                    <div>Installation</div>
+                </div>
+            </div>
+
+            <div class="main-content">
+                <!-- Step 1: Installation Path -->
+                <div class="step-content active" data-step="1">
+                    <h2>Choose Installation Directory</h2>
+                    <p style="color: #7f8c8d; margin-bottom: 30px;">Select where you want to install Server Manager and its tools.</p>
+                    
+                    <div class="form-group">
+                        <label for="installPath">Installation Path</label>
+                        <div class="description">The directory where all tools and configuration files will be stored.</div>
+                        <div class="path-input-group">
+                            <input type="text" id="installPath" class="path-input" readonly>
+                            <button class="browse-btn" onclick="selectInstallationPath()">Browse</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div style="background: #e8f4fd; border: 1px solid #bee5eb; border-radius: 8px; padding: 16px;">
+                            <h4 style="color: #0c5460; margin-bottom: 8px;">💡 Installation Tips</h4>
+                            <ul style="color: #0c5460; font-size: 13px; margin-left: 20px;">
+                                <li>Choose a path with sufficient disk space (at least 2GB recommended)</li>
+                                <li>Avoid paths with special characters or spaces if possible</li>
+                                <li>The installer will create the directory if it doesn't exist</li>
+                                <li>You can change this location later in settings</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Select Tools -->
+                <div class="step-content" data-step="2">
+                    <h2>Select Development Tools</h2>
+                    <p style="color: #7f8c8d; margin-bottom: 30px;">Choose which tools you want to install. You can add more tools later from the main application.</p>
+                    
+                    <div class="form-group">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                            <div>
+                                <button class="btn btn-secondary" onclick="selectAllTools()">Select All</button>
+                                <button class="btn btn-secondary" onclick="selectNoneTools()" style="margin-left: 8px;">Select None</button>
+                                <button class="btn btn-secondary" onclick="selectRecommendedTools()" style="margin-left: 8px;">Recommended</button>
+                            </div>
+                            <div style="font-size: 14px; color: #7f8c8d;">
+                                Total Size: <span id="totalSize" style="font-weight: 600; color: #27ae60;">0 MB</span>
+                            </div>
+                        </div>
+                        
+                        <div class="tools-grid" id="toolsGrid">
+                            <!-- Tools will be populated here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Preferences -->
+                <div class="step-content" data-step="3">
+                    <h2>Installation Preferences</h2>
+                    <p style="color: #7f8c8d; margin-bottom: 30px;">Configure additional installation options.</p>
+                    
+                    <div class="form-group">
+                        <label>Shortcuts & Integration</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="desktopShortcut" checked>
+                                <label for="desktopShortcut">Create desktop shortcut</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="startMenuShortcut" checked>
+                                <label for="startMenuShortcut">Add to Start Menu (Windows)</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="addToPath">
+                                <label for="addToPath">Add tools to system PATH</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Startup Options</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="autoStart">
+                                <label for="autoStart">Start Server Manager with Windows</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="minimizeToTray">
+                                <label for="minimizeToTray">Minimize to system tray on startup</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4: Summary -->
+                <div class="step-content" data-step="4">
+                    <h2>Installation Summary</h2>
+                    <p style="color: #7f8c8d; margin-bottom: 30px;">Review your installation settings before proceeding.</p>
+                    
+                    <div class="summary-section">
+                        <h3 style="margin-bottom: 16px; color: #2c3e50;">Installation Details</h3>
+                        <div class="summary-item">
+                            <span class="summary-label">Installation Path:</span>
+                            <span class="summary-value" id="summaryPath">-</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Selected Tools:</span>
+                            <span class="summary-value" id="summaryToolsCount">0 tools</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Total Download Size:</span>
+                            <span class="summary-value" id="summarySize">0 MB</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Estimated Time:</span>
+                            <span class="summary-value" id="summaryTime">~0 minutes</span>
+                        </div>
+                    </div>
+
+                    <div class="summary-section">
+                        <h3 style="margin-bottom: 16px; color: #2c3e50;">Selected Tools</h3>
+                        <div id="summaryToolsList">
+                            <!-- Selected tools will be listed here -->
+                        </div>
+                    </div>
+
+                    <div class="summary-section">
+                        <h3 style="margin-bottom: 16px; color: #2c3e50;">Preferences</h3>
+                        <div id="summaryPreferences">
+                            <!-- Preferences will be listed here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 5: Installation -->
+                <div class="step-content" data-step="5">
+                    <div id="installationProgress" class="progress-container">
+                        <div class="progress-percent" id="progressPercent">0%</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <div class="progress-text" id="progressText">Preparing installation...</div>
+                    </div>
+
+                    <div id="installationComplete" class="installation-complete hidden">
+                        <div class="success-icon">✅</div>
+                        <div class="success-title">Installation Complete!</div>
+                        <div class="success-message">Server Manager has been successfully installed and is ready to use.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button class="btn btn-secondary" id="cancelBtn" onclick="cancelInstallation()">Cancel</button>
+            <div>
+                <button class="btn btn-secondary" id="backBtn" onclick="previousStep()" style="display: none;">Back</button>
+                <button class="btn btn-primary" id="nextBtn" onclick="nextStep()" style="margin-left: 10px;">Next</button>
+                <button class="btn btn-success" id="installBtn" onclick="startInstallation()" style="display: none; margin-left: 10px;">Install</button>
+                <button class="btn btn-success" id="finishBtn" onclick="finishInstallation()" style="display: none; margin-left: 10px;">Finish</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        let installationConfig = {
+            installPath: '',
+            selectedTools: [],
+            createDesktopShortcut: true,
+            createStartMenuShortcut: true,
+            addToPath: false,
+            autoStart: false,
+            minimizeToTray: false
+        };
+        let availableTools = [];
+        let systemInfo = {};
+        let isInstalling = false;
+
+        // Initialize the installation UI
+        window.electronAPI.onInitInstallation((data) => {
+            installationConfig = { ...installationConfig, ...data.config };
+            availableTools = data.availableTools;
+            systemInfo = data.systemInfo;
+            
+            // Set default installation path
+            document.getElementById('installPath').value = installationConfig.installPath;
+            
+            // Populate tools
+            populateTools();
+            
+            // Update UI with saved preferences
+            updatePreferencesUI();
+        });
+
+        // Handle installation progress updates
+        window.electronAPI.onInstallationProgress((progress) => {
+            updateProgressBar(progress.percent, progress.status);
+        });
+
+        function populateTools() {
+            const toolsGrid = document.getElementById('toolsGrid');
+            toolsGrid.innerHTML = '';
+
+            availableTools.forEach(tool => {
+                const toolCard = document.createElement('div');
+                toolCard.className = `tool-card ${tool.required ? 'required' : ''} ${installationConfig.selectedTools.includes(tool.id) ? 'selected' : ''}`;
+                
+                toolCard.innerHTML = `
+                    <div class="tool-header">
+                        <input type="checkbox" class="tool-checkbox" ${tool.required ? 'checked disabled' : ''} 
+                               ${installationConfig.selectedTools.includes(tool.id) ? 'checked' : ''}
+                               onchange="toggleTool('${tool.id}', this.checked)">
+                        <div class="tool-name">${tool.name}</div>
+                        <div class="tool-version">v${tool.version}</div>
+                    </div>
+                    <div class="tool-description">${tool.description}</div>
+                    <div class="tool-info">
+                        <div class="tool-size">${tool.size}</div>
+                        <div class="tool-category">${tool.category}</div>
+                    </div>
+                `;
+
+                if (tool.required) {
+                    installationConfig.selectedTools.push(tool.id);
+                }
+
+                // toolCard.addEventListener('click', (e) => {
+                //     if (e.target.type !== 'checkbox' && !tool.required) {
+                //         const checkbox = toolCard.querySelector('.tool-checkbox');
+                //         checkbox.checked = !checkbox.checked;
+                //         toggleTool(tool.id, checkbox.checked);
+                //     }
+                // });
+                toolCard.addEventListener('click', (e) => {
+                    // Only toggle if not clicking checkbox AND tool is not required
+                    if (e.target.type !== 'checkbox' && !tool.required) { 
+                        const checkbox = toolCard.querySelector('.tool-checkbox');
+                        checkbox.checked = !checkbox.checked;
+                        toggleTool(tool.id, checkbox.checked); // Make sure toggleTool respects required status too
+                    }
+                });
+
+
+                toolsGrid.appendChild(toolCard);
+            });
+
+            updateTotalSize();
+        }
+
+        function toggleTool(toolId, selected) {
+            const tool = availableTools.find(t => t.id === toolId);
+            if (tool && tool.required && !selected) {
+                // Re-check if a required tool was attempted to be unselected
+                const checkbox = document.querySelector(`.tool-card input[type="checkbox"][onchange*="'${toolId}'"]`);
+                if(checkbox) checkbox.checked = true;
+                return; // Don't allow unselecting required tool
+            }
+
+            if (selected) {
+                if (!installationConfig.selectedTools.includes(toolId)) {
+                    installationConfig.selectedTools.push(toolId);
+                }
+            } else {
+                installationConfig.selectedTools = installationConfig.selectedTools.filter(id => id !== toolId);
+            }
+            // Update tool card appearance
+            const toolCards = document.querySelectorAll('.tool-card');
+            toolCards.forEach(card => {
+                const checkbox = card.querySelector('.tool-checkbox');
+                const toolName = card.querySelector('.tool-name').textContent;
+                const tool = availableTools.find(t => t.name === toolName);
+                
+                if (tool && tool.id === toolId) {
+                    if (selected) {
+                        card.classList.add('selected');
+                    } else {
+                        card.classList.remove('selected');
+                    }
+                }
+            });
+
+            updateTotalSize();
+        }
+
+        // function toggleTool(toolId, selected) {
+        //     if (selected) {
+        //         if (!installationConfig.selectedTools.includes(toolId)) {
+        //             installationConfig.selectedTools.push(toolId);
+        //         }
+        //     } else {
+        //         installationConfig.selectedTools = installationConfig.selectedTools.filter(id => id !== toolId);
+        //     }
+
+        //     // Update tool card appearance
+        //     const toolCards = document.querySelectorAll('.tool-card');
+        //     toolCards.forEach(card => {
+        //         const checkbox = card.querySelector('.tool-checkbox');
+        //         const toolName = card.querySelector('.tool-name').textContent;
+        //         const tool = availableTools.find(t => t.name === toolName);
+                
+        //         if (tool && tool.id === toolId) {
+        //             if (selected) {
+        //                 card.classList.add('selected');
+        //             } else {
+        //                 card.classList.remove('selected');
+        //             }
+        //         }
+        //     });
+
+        //     updateTotalSize();
+        // }
+
+        function selectAllTools() {
+            availableTools.forEach(tool => {
+                if (!installationConfig.selectedTools.includes(tool.id)) {
+                    installationConfig.selectedTools.push(tool.id);
+                }
+            });
+            populateTools();
+        }
+
+        function selectNoneTools() {
+            installationConfig.selectedTools = availableTools.filter(tool => tool.required).map(tool => tool.id);
+            populateTools();
+        }
+
+        function selectRecommendedTools() {
+            const recommended = ['cmder'];
+            installationConfig.selectedTools = availableTools.filter(tool => 
+                tool.required || recommended.includes(tool.id)
+            ).map(tool => tool.id);
+            populateTools();
+        }
+
+        function updateTotalSize() {
+            const selectedTools = availableTools.filter(tool => 
+                installationConfig.selectedTools.includes(tool.id)
+            );
+            
+            let totalSize = 0;
+            selectedTools.forEach(tool => {
+                const sizeMatch = tool.size.match(/(\d+(\.\d+)?)\s*MB/);
+                if (sizeMatch) {
+                    totalSize += parseFloat(sizeMatch[1]);
+                }
+            });
+
+            document.getElementById('totalSize').textContent = `${totalSize.toFixed(1)} MB`;
+        }
+
+        function updatePreferencesUI() {
+            document.getElementById('desktopShortcut').checked = installationConfig.createDesktopShortcut;
+            document.getElementById('startMenuShortcut').checked = installationConfig.createStartMenuShortcut;
+            document.getElementById('addToPath').checked = installationConfig.addToPath;
+            document.getElementById('autoStart').checked = installationConfig.autoStart || false;
+            document.getElementById('minimizeToTray').checked = installationConfig.minimizeToTray || false;
+        }
+
+        function updateInstallationConfig() {
+            installationConfig.createDesktopShortcut = document.getElementById('desktopShortcut').checked;
+            installationConfig.createStartMenuShortcut = document.getElementById('startMenuShortcut').checked;
+            installationConfig.addToPath = document.getElementById('addToPath').checked;
+            installationConfig.autoStart = document.getElementById('autoStart').checked;
+            installationConfig.minimizeToTray = document.getElementById('minimizeToTray').checked;
+        }
+
+        function updateSummary() {
+            document.getElementById('summaryPath').textContent = installationConfig.installPath;
+            document.getElementById('summaryToolsCount').textContent = `${installationConfig.selectedTools.length} tools`;
+            
+            const selectedTools = availableTools.filter(tool => 
+                installationConfig.selectedTools.includes(tool.id)
+            );
+            
+            let totalSize = 0;
+            selectedTools.forEach(tool => {
+                const sizeMatch = tool.size.match(/(\d+(\.\d+)?)\s*MB/);
+                if (sizeMatch) {
+                    totalSize += parseFloat(sizeMatch[1]);
+                }
+            });
+            
+            document.getElementById('summarySize').textContent = `${totalSize.toFixed(1)} MB`;
+            document.getElementById('summaryTime').textContent = `~${Math.ceil(totalSize / 10)} minutes`;
+
+            // Update tools list
+            const toolsList = document.getElementById('summaryToolsList');
+            toolsList.innerHTML = selectedTools.map(tool => 
+                `<div class="summary-item">
+                    <span class="summary-label">${tool.name}</span>
+                    <span class="summary-value">${tool.size}</span>
+                </div>`
+            ).join('');
+
+            // Update preferences
+            const preferences = document.getElementById('summaryPreferences');
+            const prefs = [];
+            if (installationConfig.createDesktopShortcut) prefs.push('Desktop shortcut');
+            if (installationConfig.createStartMenuShortcut) prefs.push('Start menu shortcut');
+            if (installationConfig.addToPath) prefs.push('Add to PATH');
+            if (installationConfig.autoStart) prefs.push('Auto-start with Windows');
+            if (installationConfig.minimizeToTray) prefs.push('Minimize to tray');
+            
+            preferences.innerHTML = prefs.length > 0 
+                ? prefs.map(pref => `<div class="summary-item"><span class="summary-label">${pref}</span></div>`).join('')
+                : '<div class="summary-item"><span class="summary-label">No additional preferences</span></div>';
+        }
+
+        async function selectInstallationPath() {
+            const path = await window.electronAPI.selectInstallationPath();
+            if (path) {
+                installationConfig.installPath = path;
+                document.getElementById('installPath').value = path;
+            }
+        }
+
+        function nextStep() {
+            if (currentStep < 5) {
+                if (validateCurrentStep()) {
+                    currentStep++;
+                    updateStepUI();
+                }
+            }
+        }
+
+        function previousStep() {
+            if (currentStep > 1 && !isInstalling) {
+                currentStep--;
+                updateStepUI();
+            }
+        }
+
+        function validateCurrentStep() {
+            switch (currentStep) {
+                case 1:
+                    if (!installationConfig.installPath) {
+                        alert('Please select an installation path.');
+                        return false;
+                    }
+                    break;
+                case 2:
+                    if (installationConfig.selectedTools.length === 0) {
+                        alert('Please select at least one tool to install.');
+                        return false;
+                    }
+                    break;
+                case 3:
+                    updateInstallationConfig();
+                    break;
+                case 4:
+                    updateSummary();
+                    break;
+            }
+            return true;
+        }
+
+        function updateStepUI() {
+            // Update sidebar steps
+            document.querySelectorAll('.step').forEach((step, index) => {
+                step.classList.remove('active', 'completed');
+                if (index + 1 === currentStep) {
+                    step.classList.add('active');
+                } else if (index + 1 < currentStep) {
+                    step.classList.add('completed');
+                }
+            });
+
+            // Update step content
+            document.querySelectorAll('.step-content').forEach((content, index) => {
+                if (index + 1 === currentStep) {
+                    content.classList.add('active');
+                } else {
+                    content.classList.remove('active');
+                }
+            });
+
+            // Update buttons
+            document.getElementById('backBtn').style.display = currentStep > 1 ? 'inline-block' : 'none';
+            document.getElementById('nextBtn').style.display = currentStep < 4 ? 'inline-block' : 'none';
+            document.getElementById('installBtn').style.display = currentStep === 4 ? 'inline-block' : 'none';
+            document.getElementById('finishBtn').style.display = currentStep === 5 && !isInstalling ? 'inline-block' : 'none';
+
+            if (currentStep === 4) {
+                updateSummary();
+            }
+        }
+
+        async function startInstallation() {
+            isInstalling = true;
+            currentStep = 5;
+            updateStepUI();
+
+            // Hide buttons during installation
+            document.getElementById('backBtn').style.display = 'none';
+            document.getElementById('installBtn').style.display = 'none';
+            document.getElementById('cancelBtn').style.display = 'none';
+
+            try {
+                const result = await window.electronAPI.startInstallation(installationConfig);
+                
+                if (result.success) {
+                    document.getElementById('installationProgress').classList.add('hidden');
+                    document.getElementById('installationComplete').classList.remove('hidden');
+                    document.getElementById('finishBtn').style.display = 'inline-block';
+                } else {
+                    alert(`Installation failed: ${result.error}`);
+                    isInstalling = false;
+                    document.getElementById('cancelBtn').style.display = 'inline-block';
+                }
+            } catch (error) {
+                alert(`Installation error: ${error.message}`);
+                isInstalling = false;
+                document.getElementById('cancelBtn').style.display = 'inline-block';
+            }
+        }
+
+        function updateProgressBar(percent, status) {
+            document.getElementById('progressPercent').textContent = `${Math.round(percent)}%`;
+            document.getElementById('progressFill').style.width = `${percent}%`;
+            document.getElementById('progressText').textContent = status;
+        }
+
+        async function cancelInstallation() {
+            if (isInstalling) {
+                const confirmed = confirm('Are you sure you want to cancel the installation?');
+                if (confirmed) {
+                    await window.electronAPI.cancelInstallation();
+                }
+            } else {
+                window.close();
+            }
+        }
+
+        function finishInstallation() {
+            window.close();
+        }
+
+        // Initialize UI
+        updateStepUI();
+    </script>
+</body>
+</html>
