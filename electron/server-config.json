@@ -1,11 +1,11 @@
 {
   "paths": {
-    "base": "C:\\server-manager\\tmp\\mysql",
-    "www": "C:\\server-manager\\tmp\\mysql\\www",
-    "bin": "C:\\server-manager\\tmp\\mysql\\bin",
-    "data": "C:\\server-manager\\tmp\\mysql\\data",
-    "mysql_data": "C:\\server-manager\\tmp\\mysql\\data\\mysql",
-    "mariadb_data": "C:\\server-manager\\tmp\\mysql\\data\\mariadb"
+    "base": "C:\\server-manager",
+    "www": "C:\\server-manager\\www",
+    "bin": "C:\\server-manager\\bin",
+    "data": "C:\\server-manager\\data",
+    "mysql_data": "C:\\server-manager\\data\\mysql",
+    "mariadb_data": "C:\\server-manager\\data\\mariadb"
   },
   "services": {
     "apache": {
@@ -13,14 +13,14 @@
       "enabled": true,
       "exe_path": "C:/server-manager/bin/apache/Apache24/bin/httpd.exe",
       "config_path": "C:/server-manager/bin/apache/Apache24/conf/httpd.conf",
-      "document_root": "C:\\server-manager\\tmp\\mysql\\www",
+      "document_root": "C:\\server-manager\\www",
       "auto_start": false
     },
     "php": {
       "port": 8000,
       "enabled": true,
       "exe_path": "C:/server-manager/bin/php/php-8.4.7-Win32-vs17-x64/php.exe",
-      "document_root": "C:\\server-manager\\tmp\\mysql\\www",
+      "document_root": "C:\\server-manager\\www",
       "auto_start": false,
       "extensions": [
         "mysqli",
@@ -71,7 +71,7 @@
   },
   "tools": {
     "cmder": {
-      "exe_path": "C:\\server-manager\\tmp\\mysql\\bin\\cmder\\Cmder.exe",
+      "exe_path": "C:\\server-manager\\bin\\cmder\\Cmder.exe",
       "default_path": "C:/server-manager/www"
     },
     "heidisql": {
@@ -97,6 +97,9 @@
     "node": {
       "exe_path": "C:/server-manager/bin/node/node-v22.16.0-win-x64/node.exe",
       "npm_path": "C:/server-manager/bin/node/node-v22.16.0-win-x64/npm.cmd"
+    },
+    "composer": {
+      "exe_path": "C:\\server-manager\\bin\\composer\\composer.phar"
     }
   },
   "downloads": {
@@ -130,7 +133,7 @@
   },
   "logging": {
     "level": "info",
-    "file_path": "C:\\server-manager\\tmp\\mysql\\logs\\server-manager.log",
+    "file_path": "C:\\server-manager\\logs\\server-manager.log",
     "max_file_size": "10MB",
     "max_files": 5,
     "console_output": true
