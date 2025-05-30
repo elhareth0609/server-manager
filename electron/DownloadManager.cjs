@@ -135,7 +135,7 @@ class DownloadManager {
     }
 
     async downloadPHP() {
-        const phpPath = join(this.paths.bin, 'php', 'php-8.4.7-Win32-vs17-x64');
+        const phpPath = join(this.paths.bin, 'php', 'php-8.3.21-Win32-vs16-x64');
         const phpZip = join(phpPath, 'php.zip');
 
         if (this.checkExists(phpPath)) {

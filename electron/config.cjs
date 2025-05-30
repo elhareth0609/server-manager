@@ -12,6 +12,7 @@ const DEFAULT_CONFIG = {
         bin: 'C:/server-manager/bin',
         data: 'C:/server-manager/data',
         mysql_data: 'C:/server-manager/data/mysql',
+        mysql_logs: 'C:/server-manager/logs/mysql',
         mariadb_data: 'C:/server-manager/data/mariadb'
     },
     services: {
@@ -24,7 +25,7 @@ const DEFAULT_CONFIG = {
         php: {
             port: 8000,
             enabled: true,
-            exe_path: 'C:/server-manager/bin/php/php-8.4.7-Win32-vs17-x64/php.exe',
+            exe_path: 'C:/server-manager/bin/php/php-8.3.21-Win32-vs16-x64/php.exe',
             document_root: 'C:/server-manager/www'
         },
         mysql: {
@@ -32,6 +33,7 @@ const DEFAULT_CONFIG = {
             enabled: true,
             exe_path: 'C:/server-manager/bin/MySQL/mysql-8.0.42-winx64/bin/mysqld.exe',
             data_dir: 'C:/server-manager/data/mysql',
+            log_dir: 'C:/server-manager/logs/mysql',
             socket: 'C:/server-manager/data/mysql/mysql.sock'
         },
         mariadb: {
@@ -67,7 +69,7 @@ const DEFAULT_CONFIG = {
     downloads: {
         cmder: 'https://github.com/cmderdev/cmder/releases/download/v1.3.25/cmder.zip',
         apache: 'https://www.apachelounge.com/download/VS17/binaries/httpd-2.4.63-250207-win64-VS17.zip',
-        php: 'https://windows.php.net/downloads/releases/php-8.4.7-Win32-vs17-x64.zip',
+        php: 'https://windows.php.net/downloads/releases/php-8.3.21-Win32-vs16-x64.zip',
         mariadb: 'https://archive.mariadb.org//mariadb-12.0.0/winx64-packages/mariadb-12.0.0-winx64.zip',
         phpmyadmin: 'https://files.phpmyadmin.net/phpMyAdmin/5.2.2/phpMyAdmin-5.2.2-all-languages.zip',
         ngrok: 'https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-windows-amd64.zip',
